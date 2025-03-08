@@ -1,16 +1,19 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 
 export class CreateCategoryDto {
-  @IsString()
+  @ApiProperty({ example: 'Electronics', description: 'Kategoriya nomi' })
+  @IsString({ message: 'Kategoriya nomi satr (string) bo‘lishi kerak.' })
   name: string;
 
+  @ApiPropertyOptional({ example: 'All kinds of electronic devices', description: 'Kategoriya tavsifi' })
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'Kategoriya tavsifi satr (string) bo‘lishi kerak.' })
   description?: string;
 
+  @ApiPropertyOptional({ example: 'https://example.com/image.jpg', description: 'Kategoriya rasmi (URL yoki fayl nomi)' })
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'Kategoriya rasmi satr (string) bo‘lishi kerak.' })
   image?: string;
 }

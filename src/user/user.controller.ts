@@ -16,7 +16,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/shared/guard/auth.guard';
 import { RolesGuard } from 'src/shared/guard/roles.guard';
 import { Roles } from 'src/shared/guard/roles.decorator';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
+@ApiBearerAuth()
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
@@ -25,6 +28,8 @@ export class UserController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'user')
   @Get(':id')
+  @ApiOperation({ summary: 'Get user by ID (Admin & User)' })
+  @ApiParam({ name: 'id', type: String, description: 'User ID' })
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
   }
@@ -33,6 +38,8 @@ export class UserController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('user')
   @Patch()
+  @ApiOperation({ summary: 'Update user profile (User only)' })
+  @ApiBody({ type: UpdateUserDto }) 
   update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(req.user, updateUserDto);
   }
@@ -40,6 +47,8 @@ export class UserController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'user')
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete user (Admin & User)' })
+  @ApiParam({ name: 'id', type: Number, description: 'User ID' }) 
   remove(@Param('id') id: number) {
     return this.userService.remove(+id);
   }
